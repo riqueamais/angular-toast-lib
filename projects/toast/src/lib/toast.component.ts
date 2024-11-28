@@ -49,7 +49,7 @@ import {
         class="card max-w-96 h-20 flex items-center justify-between gap-3 bg-white rounded-lg py-3 px-3 mb-5 cursor-default"
       >
         <div
-          class="min-w-10 h-10 flex items-center justify-center rounded-full"
+          class="min-w-10 h-10 flex items-center justify-center rounded-full shadow-md"
           [ngClass]="{
             'bg-green-500': toast.type === 'success',
             'bg-red-200': toast.type === 'error',
@@ -57,26 +57,10 @@ import {
           }"
         >
           <iconify-icon
-            icon="{{
-              toast.type === 'success'
-                ? 'material-symbols:check-circle'
-                : toast.type === 'error'
-                ? 'material-symbols:cancel'
-                : toast.type === 'welcome'
-                ? 'tabler:diamond'
-                : ''
-            }}"
+            [icon]="getIconForToast(toast)"
             width="24"
             height="24"
-            [className]="
-              toast.type === 'success'
-                ? 'text-white'
-                : toast.type === 'error'
-                ? 'text-red-500'
-                : toast.type === 'welcome'
-                ? 'text-purple-creath-8'
-                : ''
-            "
+            [className]="getIconColorForToast(toast)"
           />
         </div>
         <div class="w-full flex flex-col">
@@ -85,12 +69,20 @@ import {
             [ngClass]="{
               'text-green-500': toast.type === 'success',
               'text-red-500': toast.type === 'error',
-              'text-purple-creath-8': toast.type === 'welcome'
+              'text-black': toast.type === 'welcome'
             }"
           >
-            {{ toast.type === 'success' ? 'Sucesso' : toast.type === 'error' ? 'Erro' : 'Bem-vindo' }}
+            {{
+              toast.type === 'success'
+                ? 'Sucesso'
+                : toast.type === 'error'
+                ? 'Erro'
+                : toast.type === 'welcome'
+                ? 'Bem-vindo'
+                : toast.title
+            }}
           </span>
-          <p class="text-sm font-arboria text-gray-600">{{ toast.message }}</p>
+          <p class="text-sm text-gray-600">{{ toast.message }}</p>
         </div>
         <iconify-icon
           icon="material-symbols:close"
@@ -114,5 +106,33 @@ export class ToastComponent {
     setTimeout(() => {
       this.toastService.remove(index);
     }, 300);
+  }
+
+  getIconForToast(toast: any): string {
+    if (toast.type === 'success') {
+      return 'material-symbols:check-circle';
+    } else if (toast.type === 'error') {
+      return 'material-symbols:cancel';
+    } else if (toast.type === 'welcome') {
+      return 'tabler:diamond';
+    } else if (toast.type === 'custom' && toast.icon) {
+      return toast.icon;
+    }
+
+    return '';
+  }
+
+  getIconColorForToast(toast: any): string {
+    if (toast.type === 'success') {
+      return 'text-white';
+    } else if (toast.type === 'error') {
+      return 'text-red-500';
+    } else if (toast.type === 'welcome') {
+      return 'text-black';
+    } else if (toast.type === 'custom' && toast.iconColor) {
+      return toast.iconColor;
+    }
+
+    return '';
   }
 }

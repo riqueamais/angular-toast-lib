@@ -5,18 +5,42 @@ import { Injectable } from '@angular/core';
 })
 export class ToastService {
   defaultDuration: number = 3500;
-  toasts: { message: string; duration: number; type: 'success' | 'error' | 'welcome', isExiting?: boolean; }[] =
-    [];
+  toasts: {
+    title: string,
+    message: string;
+    duration: number;
+    type: 'success' | 'error' | 'welcome' | 'custom';
+    icon?: string;
+    iconColor?: string;
+    bgColor?: string;
+    isExiting?: boolean;
+  }[] = [];
 
-  add(
-    message: string,
-    duration: number = this.defaultDuration,
-    type: 'success' | 'error' | 'welcome' = 'success'
-  ) {
-    const toast = { message, duration, type };
+  add({
+    title,
+    message,
+    duration = this.defaultDuration,
+    type = 'success',
+    icon,
+    iconColor,
+    bgColor
+  }: {
+    title: string,
+    message: string;
+    duration?: number;
+    type?: 'success' | 'error' | 'welcome' | 'custom';
+    icon?: string;
+    iconColor?: string;
+    bgColor?: string;
+  }) {
+    const toast = { title, message, duration, type, icon, iconColor, bgColor };
+
     this.toasts.push(toast);
 
-    setTimeout(() => this.removeWithAnimation(this.toasts.length - 1), duration);
+    setTimeout(
+      () => this.removeWithAnimation(this.toasts.length - 1),
+      duration
+    );
   }
 
   private removeWithAnimation(index: number) {
