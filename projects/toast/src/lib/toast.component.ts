@@ -50,11 +50,7 @@ import {
       >
         <div
           class="min-w-10 h-10 flex items-center justify-center rounded-full shadow-md"
-          [ngClass]="{
-            'bg-green-500': toast.type === 'success',
-            'bg-red-200': toast.type === 'error',
-            'bg-purple-300': toast.type === 'welcome'
-          }"
+          [ngClass]="getIconBgClassForToast(toast)"
         >
           <iconify-icon
             [icon]="getIconForToast(toast)"
@@ -134,5 +130,20 @@ export class ToastComponent {
     }
 
     return '';
+  }
+
+  getIconBgClassForToast(toast: any): string[] {
+    if (toast.type === 'custom' && toast.bgColor) {
+      return [toast.bgColor];
+    }
+    return [
+      toast.type === 'success'
+        ? 'bg-green-500'
+        : toast.type === 'error'
+        ? 'bg-red-200'
+        : toast.type === 'welcome'
+        ? 'bg-purple-300'
+        : toast.bgColor,
+    ];
   }
 }
